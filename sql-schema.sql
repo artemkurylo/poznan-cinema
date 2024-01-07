@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS public.ticket
     id serial NOT NULL,
     showtime_id bigint NOT NULL,
     customer_id bigint NOT NULL,
+    seat_id bigint,
     PRIMARY KEY (id)
 );
 
@@ -50,6 +51,24 @@ CREATE TABLE IF NOT EXISTS public.cinema_address
     PRIMARY KEY (id)
 );
 
+CREATE TABLE IF NOT EXISTS public.hall
+(
+    id serial NOT NULL,
+    letter character(1) NOT NULL,
+    cinema_id bigint NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS public.seat
+(
+    id serial NOT NULL,
+    hall_id bigint NOT NULL,
+    "column" smallint NOT NULL,
+    "row" smallint NOT NULL,
+    PRIMARY KEY (id),
+    CONSTRAINT unique_seat_per_hall UNIQUE ("column", "row", hall_id)
+);
+
 ALTER TABLE IF EXISTS public.showtime
     ADD CONSTRAINT fk_movie_id FOREIGN KEY (movie_id)
     REFERENCES public.movie (id) MATCH SIMPLE
@@ -74,9 +93,33 @@ ALTER TABLE IF EXISTS public.ticket
     NOT VALID;
 
 
+ALTER TABLE IF EXISTS public.ticket
+    ADD CONSTRAINT fk_seat_id FOREIGN KEY (seat_id)
+    REFERENCES public.seat (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
 ALTER TABLE IF EXISTS public.cinema
     ADD CONSTRAINT fk_cinema_address_id FOREIGN KEY (cinema_address_id)
     REFERENCES public.cinema_address (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public.hall
+    ADD CONSTRAINT fk_cinema_id FOREIGN KEY (cinema_id)
+    REFERENCES public.cinema (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public.seat
+    ADD CONSTRAINT fk_hall_id FOREIGN KEY (hall_id)
+    REFERENCES public.hall (id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
