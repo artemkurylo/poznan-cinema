@@ -34,6 +34,22 @@ CREATE TABLE IF NOT EXISTS public.customer
     PRIMARY KEY (id)
 );
 
+CREATE TABLE IF NOT EXISTS public.cinema
+(
+    id serial NOT NULL,
+    cinema_address_id bigint NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS public.cinema_address
+(
+    id serial NOT NULL,
+    city character varying(255) NOT NULL,
+    street character varying(255) NOT NULL,
+    zip_code character varying(255),
+    PRIMARY KEY (id)
+);
+
 ALTER TABLE IF EXISTS public.showtime
     ADD CONSTRAINT fk_movie_id FOREIGN KEY (movie_id)
     REFERENCES public.movie (id) MATCH SIMPLE
@@ -53,6 +69,14 @@ ALTER TABLE IF EXISTS public.ticket
 ALTER TABLE IF EXISTS public.ticket
     ADD CONSTRAINT fk_customer_id FOREIGN KEY (customer_id)
     REFERENCES public.customer (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public.cinema
+    ADD CONSTRAINT fk_cinema_address_id FOREIGN KEY (cinema_address_id)
+    REFERENCES public.cinema_address (id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
