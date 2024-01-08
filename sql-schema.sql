@@ -3,12 +3,16 @@
 BEGIN;
 
 
+DROP TABLE IF EXISTS public.movie;
+
 CREATE TABLE IF NOT EXISTS public.movie
 (
     id serial NOT NULL,
     title character varying(256) NOT NULL,
     PRIMARY KEY (id)
 );
+
+DROP TABLE IF EXISTS public.showtime;
 
 CREATE TABLE IF NOT EXISTS public.showtime
 (
@@ -17,6 +21,8 @@ CREATE TABLE IF NOT EXISTS public.showtime
     scheduled_date timestamp with time zone NOT NULL,
     PRIMARY KEY (id)
 );
+
+DROP TABLE IF EXISTS public.ticket;
 
 CREATE TABLE IF NOT EXISTS public.ticket
 (
@@ -27,13 +33,17 @@ CREATE TABLE IF NOT EXISTS public.ticket
     PRIMARY KEY (id)
 );
 
+DROP TABLE IF EXISTS public.customer;
+
 CREATE TABLE IF NOT EXISTS public.customer
 (
-    id bigint NOT NULL,
+    id serial NOT NULL,
     first_name character varying(255) NOT NULL,
     last_name character varying(255) NOT NULL,
     PRIMARY KEY (id)
 );
+
+DROP TABLE IF EXISTS public.cinema;
 
 CREATE TABLE IF NOT EXISTS public.cinema
 (
@@ -41,6 +51,8 @@ CREATE TABLE IF NOT EXISTS public.cinema
     cinema_address_id bigint NOT NULL,
     PRIMARY KEY (id)
 );
+
+DROP TABLE IF EXISTS public.cinema_address;
 
 CREATE TABLE IF NOT EXISTS public.cinema_address
 (
@@ -51,22 +63,27 @@ CREATE TABLE IF NOT EXISTS public.cinema_address
     PRIMARY KEY (id)
 );
 
+DROP TABLE IF EXISTS public.hall;
+
 CREATE TABLE IF NOT EXISTS public.hall
 (
     id serial NOT NULL,
     letter character(1) NOT NULL,
     cinema_id bigint NOT NULL,
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    CONSTRAINT unique_letter UNIQUE (id)
 );
+
+DROP TABLE IF EXISTS public.seat;
 
 CREATE TABLE IF NOT EXISTS public.seat
 (
     id serial NOT NULL,
     hall_id bigint NOT NULL,
-    "column" smallint NOT NULL,
-    "row" smallint NOT NULL,
+    row_num smallint NOT NULL,
+    seat_num smallint NOT NULL,
     PRIMARY KEY (id),
-    CONSTRAINT unique_seat_per_hall UNIQUE ("column", "row", hall_id)
+    CONSTRAINT unique_seat_per_hall UNIQUE (row_num, seat_num, hall_id)
 );
 
 ALTER TABLE IF EXISTS public.showtime
