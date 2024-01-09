@@ -5,7 +5,6 @@ Design a Database for 'Poznan' Cinema.
 Database requirements:
 - Define Core Entities and Relations (Cinema, Hall, Movie, Showtime, Seat, Ticket)
 - Introduce an easy way to book/buy a Ticket for a Showtime (in a concurrent environment)
-- Define Key Roles in the database - Owner (root access), Administrator of Cinema (operate on particular cinema), Customer (buy tickets)
 
 ## How to Bootstrap Project?
 Those are simple steps for launching the Poznan Cinema Database on your machine.
