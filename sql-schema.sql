@@ -30,7 +30,8 @@ CREATE TABLE IF NOT EXISTS public.ticket
     showtime_id bigint NOT NULL,
     customer_id bigint NOT NULL,
     seat_id bigint,
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    CONSTRAINT unique_seat_per_showtime UNIQUE (showtime_id, seat_id)
 );
 
 DROP TABLE IF EXISTS public.customer;
