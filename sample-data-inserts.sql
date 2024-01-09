@@ -1,6 +1,21 @@
 BEGIN;
 
--- Procedure for Generating Seats
+-- Book a Ticket
+
+CREATE OR REPLACE PROCEDURE book_ticket(showtime_id BIGINT,
+										customer_id BIGINT, 
+										seat_id BIGINT
+) AS $$
+BEGIN
+-- We can use 'Last one wins' here
+-- If we have a website, which shows available seats - let's book a ticket if the customer proceeds to payment
+-- If the payment process is aborted - we delete this row in Ticket table
+-- Concurrency problem is solved and there is no overhead (optimistic locking from PostgreSQL is fine)
+INSERT INTO ticket (showtime_id, customer_id, seat_id) VALUES (showtime_id, customer_id, seat_id);
+END;
+$$ LANGUAGE plpgsql;
+
+-- Generate seats
 
 CREATE OR REPLACE PROCEDURE create_rows_of_seats(
     hall_id BIGINT,
@@ -83,5 +98,11 @@ INSERT INTO showtime (movie_id, scheduled_date) VALUES (3, NOW() + INTERVAL '3 d
 INSERT INTO customer (first_name, last_name) VALUES ('Artem', 'Kurylo');
 INSERT INTO customer (first_name, last_name) VALUES ('John', 'Doe');
 INSERT INTO customer (first_name, last_name) VALUES ('Jane', 'Doe');
+
+-- Book Tickets
+
+CALL book_ticket(1, 1, 1);
+CALL book_ticket(2, 2, 1);
+CALL book_ticket(3, 3, 1);
 
 COMMIT;
